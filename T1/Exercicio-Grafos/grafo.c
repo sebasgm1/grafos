@@ -91,6 +91,23 @@ void destroi_grafo(grafo G) {
   G = NULL;
 }
 
+// cria novo vertice com id <id> e adiciona ao grafo G
+void adiciona_vertice(int id, grafo G) {
+  if (!G) return;
+
+  t_vertice *v = malloc (sizeof (t_vertice));
+  v->id = id;
+  v->fronteira = NULL;
+
+  if (!G->vertices) {
+    G->vertices = cria_lista ();
+  }
+
+  empilha (v, G->vertices);
+}
+
+
+
 // remove vertice com id <id> do grafo G e o destroi
 // [deve remover e destruir tambem as arestas incidentes]
 void remove_vertice(int id, grafo G) {
@@ -119,11 +136,38 @@ void remove_vertice(int id, grafo G) {
 
 }
 
+
+int existe_aresta (int u_id, int v_id, grafo G) {
+  if (!G) return;
+
+  // Verifica se existe né
+  if (busca_chave (u_id, G->vertices, vertice_id) && busca_chave (v_id, G->vertices, vertice_id)) {
+    return 1;
+  }
+
+  return 0;
+}
+
+
+
 // cria aresta com id <id> incidente a vertices com
 // ids <u_id> e <v_id> e adiciona ao grafo G
 void adiciona_aresta(int id, int u_id, int v_id, grafo G) {
-  
-  // codificar...
+  if (!G) return;
+
+  // Verifica se aqueles vértices existem antes de fazer o malloc e adicionar
+  if (existe_aresta (u_id, v_id, G)) {
+
+    t_aresta *a = malloc (sizeof(t_aresta));
+    if (!a) perror ("Erro ao criar a aresta\n");
+
+    a->id = id;
+    a->u = u_id;
+    a->v = v_id;
+
+    empilha (a, G->arestas);
+  }
+  else perror ("Não existem esses vértices\n");
 
 }
 
